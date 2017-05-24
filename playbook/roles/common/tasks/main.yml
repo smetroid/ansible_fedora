@@ -5,6 +5,12 @@
 - name: lxde desktop
   dnf: name="@lxde-desktop" state=present
 
+- name: install vim-minimal
+  dnf: name=vim-minimal state=present
+
+- name: update vim-minimal to match the version of vim-common
+  dnf: name=vim-minimal state=latest
+
 - name: common package items
   dnf: name={{item}} state=present
   with_items:
@@ -15,7 +21,6 @@
     - git
     - ruby
     - gvim
-    - vim-common
     - vim-enhanced
     - vim-X11
     - kdiff3
@@ -71,14 +76,6 @@
   shell: tar -xvzf /opt/idea/{{ idea_tar_file }}
   when: intellij_downloaded.stat.exists == False
 
-- name: add docker repo
-  yum_repository:
-    name: docker
-    description: Docker Repo
-    file: external_repos
-    baseurl: https://download.docker.com/linux/fedora/$releasever/$basearch/stable
-    gpgcheck: no
-
 - name: add unitedrpm's gpg key
   shell: rpm --import https://raw.githubusercontent.com/UnitedRPMs/unitedrpms/master/URPMS-GPG-PUBLICKEY-Fedora-24
 
@@ -87,6 +84,17 @@
 
 - name: install kdeenlive for video editing
   dnf: name=kdenlive state=present
+
+- name: add docker repo
+  yum_repository:
+    name: docker
+    description: Docker Repo
+    file: external_repos
+    baseurl: https://download.docker.com/linux/fedora/$releasever/$basearch/stable
+    gpgcheck: no
+
+- name: install docker
+  dnf: name=docker-ce state=present
 
 - name: start docker
   service: name=docker state=started
