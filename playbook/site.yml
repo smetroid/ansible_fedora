@@ -1,0 +1,13 @@
+- name: Install fedora 24 and it's configurations
+  hosts: fedora
+  gather_facts: false
+  become: true
+  roles:
+    - common
+    - rails
+    - java
+      #- ruby
+      #- nodejs
+
+
+

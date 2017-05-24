@@ -1,0 +1,108 @@
+- name: install development tools
+  dnf: name="@development tools" state=present
+  tags: development
+
+- name: lxde desktop
+  dnf: name="@lxde-desktop" state=present
+
+- name: common package items
+  dnf: name={{item}} state=present
+  with_items:
+    - parcellite
+      #    - teamviewer
+    - chromium
+      #    - vivaldi
+    - git
+    - ruby
+    - gvim
+    - vim-common
+    - vim-enhanced
+    - vim-X11
+    - kdiff3
+    - keepassx
+    - sqlite
+    - sqlitebrowser
+    - geary
+    - remmina
+      #- VirtualBox
+      #- VirtualBox-devel
+      #- VirtualBox-server
+      #- python-VirtualBox
+      #- synchthing
+    - golang
+    - vagrant
+    - virt-manager
+    - virt-viewer
+    - inkscape
+    - blender
+    - x2goagent
+    - x2goserver
+    - x2goclient
+    - cups-x2go
+    - x2goplugin
+    - x2goserver-xsession
+    - x2goserver-printing
+    - x2goserver-fmbindings
+    - x2godesktopsharing
+    - xpra
+    - xpra-html5
+
+- name: create /opt/idea directory to install intellij
+  file:
+    path: /opt/idea
+    state: directory
+    mode: 0755
+
+
+- name: check to see if {{ idea_tar_file }} is already downloaded
+  stat:
+    path: /opt/idea/{{ idea_tar_file }}
+  register: intellij_downloaded
+
+  #- debug: var=intellij_downloaded
+
+- name: download IntelliJ
+  get_url:
+    url: https://download.jetbrains.com/idea/{{ idea_tar_file }}
+    dest: /opt/idea/
+  when: intellij_downloaded.stat.exists == False
+
+- name: untar intelliJ to /opt/idea/
+  shell: tar -xvzf /opt/idea/{{ idea_tar_file }}
+  when: intellij_downloaded.stat.exists == False
+
+- name: add docker repo
+  yum_repository:
+    name: docker
+    description: Docker Repo
+    file: external_repos
+    baseurl: https://download.docker.com/linux/fedora/$releasever/$basearch/stable
+    gpgcheck: no
+
+- name: add unitedrpm's gpg key
+  shell: rpm --import https://raw.githubusercontent.com/UnitedRPMs/unitedrpms/master/URPMS-GPG-PUBLICKEY-Fedora-24
+
+- name: install unitedrpm's
+  shell: dnf -y install https://github.com/UnitedRPMs/unitedrpms/releases/download/3/unitedrpms-$(rpm -E %fedora)-3.fc$(rpm -E %fedora).noarch.rpm
+
+- name: install kdeenlive for video editing
+  dnf: name=kdenlive state=present
+
+- name: start docker
+  service: name=docker state=started
+
+- name: install byobu the last version {{ byobu_version }}
+  dnf: name=byobu-{{ byobu_version }} state=present
+
+- name: install tmux version {{ tmux_version }}
+  dnf: name=tmux-{{ tmux_version }} state=present
+
+  #- name: add visual code repo
+  #apt-key: url=https://packages.microsoft.com/keys/microsoft.asc state=present
+
+  #- name: add repository
+  #shell: 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
+
+  #- name: install visual studio code
+  #yum: name=code state=present
+

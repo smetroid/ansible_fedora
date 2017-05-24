@@ -1,0 +1,5 @@
+host stash.softlayer.local
+        Hostname        stash.softlayer.local
+        IdentityFile    ~/.ssh/stash-global-ro
+        IdentitiesOnly  yes
+

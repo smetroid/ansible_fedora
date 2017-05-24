@@ -1,0 +1,14 @@
+- name: install ruby
+  dnf: name=ruby state=present
+  tags: rails
+
+- name: install ruby-devel
+  dnf: name=ruby-devel state=present
+  tags: rails
+
+- name: install zlib
+  dnf: name=zlib-devel state=present
+
+- name: install bundler
+  gem:  name=bundler state=present
+  tags: rails

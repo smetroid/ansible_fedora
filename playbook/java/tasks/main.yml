@@ -1,0 +1,42 @@
+- name: make sure the jenkins group exists
+  group:
+    name: jenkins
+    state: present
+
+- name:  create "{{ java_location }}" directory
+  file:
+    dest: "{{ java_location }}"
+    state: directory
+    owner: root
+    group: jenkins
+    mode: 0774
+
+- name: check to see if {{ java_filename }} is already downloaded
+  stat:
+    path: /opt/java/{{ java_filename }}
+  register: java_downloaded
+
+- name: download Java
+  get_url:
+    url: "{{ java_url }}"
+    dest: "{{ java_location }}/{{ java_filename }}"
+    headers: "Cookie: oraclelicense=accept-securebackup-cookie"
+  when: java_downloaded.stat.exists == False
+
+- name: unpack the java archive
+  unarchive:
+    copy: false
+    src: "{{ java_location }}/{{ java_filename }}"
+    dest: "{{ java_location }}"
+    owner: root
+    group: jenkins
+    #remote_src: yes
+
+- name: create symbolic link to the extracted jre
+  file:
+    src: "{{ java_jdk_location }}/jre"
+    dest: "{{ java_location }}/jre"
+    state: link
+    owner: root
+    group: jenkins
+    mode: 0774
