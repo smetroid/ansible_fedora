@@ -1,0 +1,18 @@
+- name: download golang version {{ golang_version }}
+  shell: wget https://storage.googleapis.com/golang/{{ golang_version }}
+
+- name: change ownership to /usr/local
+  shell: chown -R root:adm /usr/local
+
+- name: change permissions of /usr/local
+  shell: chmod -R g=rwx /usr/local
+
+- name: untar and install golang to /usr/local
+  shell: tar -C /usr/local -xzf ~/Downloads/{{ golang_verion }}
+
+- name: install glide
+  shell: go get glide github.com/Masterminds/glide
+
+- name: compile glide and install glide to /usr/local/bin
+  shell: cd $GOPATH/src/github.com/Masterminds/glide && make build && make install
+
