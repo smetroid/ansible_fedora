@@ -1,0 +1,16 @@
+- name: add docker group
+  group: name=docker state=present
+
+- name: add users to docker group
+  user:
+    name: kike
+    groups: docker
+    append: yes
+
+- name: install docker
+  dnf: name=docker-ce state=present
+
+- name: start docker
+  service: name=docker state=started enabled=yes
+
+

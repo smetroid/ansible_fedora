@@ -1,6 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'virtualbox'
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
@@ -12,11 +12,22 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.define "fedora" do |web|
-    web.vm.box = "fedora/24-cloud-base"
-    web.vm.provider "libvirt" do |v|
+  config.vm.define "personal" do |desktop|
+    desktop.vbguest.auto_update = true
+    desktop.vbguest.auto_reboot = true
+    desktop.vbguest.installer = VagrantVbguest::Installers::RedHat
+    desktop.vm.box = "bento/fedora-24"
+    #web.vm.provider "libvirt" do |v|
+    desktop.vm.provider :virtualbox do |v|
       v.memory = 3072
       v.cpus = 2
+      v.gui = true
+    	# Default host uses a USB mouse instead of PS2
+      v.customize ["modifyvm", :id, "--mouse", "usb"]
+			# Add IDE controller to the VM, to allow virtual media to be attached to the controller
+			#v.customize ["storagectl", :id, "--name", "IDE Controller", "--add", "ide"]
+			# Give the VM access to the host's CD/DVD drive, by attaching the medium to the virtual IDE controller
+			#v.customize ["storageattach", :id, "--storagectl", "IDE Controller", "--tport 0", "--device 0", "--type", "dvddrive"]
     end
   end
 
@@ -43,12 +54,12 @@ Vagrant.configure(2) do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.network "private_network", ip: "192.168.56.110"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
-  # config.vm.network "public_network"
+  #config.vm.network "public_network"
 
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is

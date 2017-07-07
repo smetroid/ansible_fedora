@@ -1,0 +1,28 @@
+- name: add docker repo
+  yum_repository:
+    name: docker
+    description: Docker Repo
+    file: external_repos
+    baseurl: https://download.docker.com/linux/fedora/$releasever/$basearch/stable
+    gpgcheck: no
+
+#- name: add visual code repo
+#apt-key: url=https://packages.microsoft.com/keys/microsoft.asc state=present
+
+#- name: add repository
+#shell: 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
+
+#- name: install visual studio code
+#yum: name=code state=present
+
+#- name: add rpmfusion repo
+#shell: dnf install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
+
+- name: add unitedrpm's gpg key
+  shell: rpm --import https://raw.githubusercontent.com/UnitedRPMs/unitedrpms/master/URPMS-GPG-PUBLICKEY-Fedora-24
+
+- name: install unitedrpm's
+  shell: dnf -y install https://github.com/UnitedRPMs/unitedrpms/releases/download/3/unitedrpms-$(rpm -E %fedora)-3.fc$(rpm -E %fedora).noarch.rpm
+
+
+

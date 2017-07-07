@@ -3,9 +3,11 @@
   gather_facts: false
   become: true
   roles:
+    - repos
     - common
     - rails
     - java
+    - docker
       #- ruby
       #- nodejs
 

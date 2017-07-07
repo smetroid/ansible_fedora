@@ -1,5 +1,5 @@
 [development]
-fedora   ansible_ssh_pass=vagrant  ansible_ssh_host=192.168.33.10  ansible_ssh_private_key_file=./.vagrant/machines/rails/libvirt/private_key
+fedora   ansible_ssh_pass=vagrant  ansible_ssh_host=192.168.56.110  ansible_ssh_private_key_file=./.vagrant/machines/fedora/virtualbox/private_key
 
 [all:vars]
 ansible_ssh_user=vagrant
