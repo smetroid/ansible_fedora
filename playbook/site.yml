@@ -12,5 +12,13 @@
       #- ruby
       #- nodejs
 
+- name: golang
+  hosts: all
+  gather_facts: true
+  become: true
+  roles:
+    - golang
+  tags:
+    - golang
 
 

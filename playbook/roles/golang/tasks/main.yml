@@ -1,18 +1,54 @@
+- name: check if golang version is downloaded
+  stat:
+    path: /tmp/{{ golang_version }}
+  register: golang_download_exists
+
 - name: download golang version {{ golang_version }}
-  shell: wget https://storage.googleapis.com/golang/{{ golang_version }}
+  get_url:
+    url: https://storage.googleapis.com/golang/{{ golang_version }}
+    dest: /tmp/{{ golang_version }}
+    mode: 0440
+  when: golang_download_exists.stat.exists == False
+
+- name: check to see if golang directory exists
+  stat:
+    path: /usr/local/go
+  register: golang_dir
+
+- name: unarchive golang and install to /usr/local
+  unarchive:
+    src: /tmp/{{ golang_version }}
+    dest: /usr/local
+    remote_src: True
+  when: golang_dir.stat.exists == False
+
+  #- name: untar and install golang to /usr/local
+  #shell: tar -C /usr/local -xzf /tmp/{{ golang_version }}
 
 - name: change ownership to /usr/local
-  shell: chown -R root:adm /usr/local
+  file:
+    group: adm
+    path: /usr/local/go
+    mode: g=rwx
 
-- name: change permissions of /usr/local
-  shell: chmod -R g=rwx /usr/local
+- name: change ownership to /usr/local/bin
+  file:
+    group: adm
+    path: /usr/local/bin
+    mode: g=rwx
 
-- name: untar and install golang to /usr/local
-  shell: tar -C /usr/local -xzf ~/Downloads/{{ golang_verion }}
+- name: check if glide is installed
+  stat:
+    path: /usr/local/go/bin/glide
+  register: glide_exists
 
 - name: install glide
-  shell: go get glide github.com/Masterminds/glide
+  shell: curl https://glide.sh/get | sh
+  environment:
+      GOPATH: /usr/local/go
+      PATH: "{{ ansible_env.PATH }}:/usr/local/go/bin"
+  when: glide_exists.stat.exists == False
 
-- name: compile glide and install glide to /usr/local/bin
-  shell: cd $GOPATH/src/github.com/Masterminds/glide && make build && make install
+      #- name: compile glide and install glide to /usr/local/bin
+      #shell: cd $GOPATH/src/github.com/Masterminds/glide && make build && make install
 
