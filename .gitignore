@@ -4,4 +4,4 @@
 *.pyc
 **/.*.sw*
 .bundle
-site.retry
+*.retry

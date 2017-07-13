@@ -30,12 +30,14 @@
     group: adm
     path: /usr/local/go
     mode: g=rwx
+    recurse: yes
 
 - name: change ownership to /usr/local/bin
   file:
     group: adm
     path: /usr/local/bin
     mode: g=rwx
+    recurse: yes
 
 - name: check if glide is installed
   stat:

@@ -1,8 +1,6 @@
 [development]
-kikes-desktop ansible_ssh_host=127.0.0.1
+kikes-desktop  ansible_ssh_host=192.168.1.3
 
 [all:vars]
-ansible_ssh_user={{ local_host_user }}
-ansible_ssh_pass={{ local_host_pass }}
 ansible_python_interpreter=/usr/bin/python3
 
