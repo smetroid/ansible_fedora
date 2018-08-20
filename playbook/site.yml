@@ -9,8 +9,6 @@
     - java
     - docker
     - golang
-      #- ruby
-      #- nodejs
 
 - name: golang
   hosts: all
@@ -20,5 +18,3 @@
     - golang
   tags:
     - golang
-
-

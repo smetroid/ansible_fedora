@@ -1,6 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-ENV['VAGRANT_DEFAULT_PROVIDER'] = 'virtualbox'
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
@@ -18,7 +18,7 @@ Vagrant.configure(2) do |config|
     desktop.vbguest.installer = VagrantVbguest::Installers::RedHat
     desktop.vm.box = "bento/fedora-24"
     #web.vm.provider "libvirt" do |v|
-    desktop.vm.provider :virtualbox do |v|
+    desktop.vm.provider :libvirt do |v|
       v.memory = 3072
       v.cpus = 2
       v.gui = true
