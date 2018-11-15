@@ -12,9 +12,9 @@
   dnf: name=vim-minimal state=latest
 
 - name: common package items
-  dnf: name={{item}} state=present
+  dnf: name={{ item }} state=present
   with_items:
-    - parcellite
+    - copyq
       #    - teamviewer
     - chromium
       #    - vivaldi
@@ -50,6 +50,11 @@
     - nmap
     - xorg-x11-* #without this lxde won't work
     - autokey-qt
+    - xdotool
+    - qemu
+    - libvirt
+    - libxml2-devel
+    - libxslt-devel
 
 - name: create /opt/idea directory to install intellij
   file:
@@ -57,25 +62,25 @@
     state: directory
     mode: 0755
 
-- name: check to see if {{ idea_tar_file }} is already downloaded
-  stat:
-    path: /opt/idea/{{ idea_tar_file }}
-  register: intellij_downloaded
+    #- name: check to see if {{ idea_tar_file }} is already downloaded
+    #  stat:
+    #    path: /opt/idea/{{ idea_tar_file }}
+    #  register: intellij_downloaded
+    #
+    #  #- debug: var=intellij_downloaded
+    #
+    #- name: download IntelliJ
+    #  get_url:
+    #    url: https://download.jetbrains.com/idea/{{ idea_tar_file }}
+    #    dest: /opt/idea/
+    #  when: intellij_downloaded.stat.exists == False
+    #
+    #- name: untar intelliJ to /opt/idea/
+    #  shell: tar -xvzf /opt/idea/{{ idea_tar_file }}
+    #  when: intellij_downloaded.stat.exists == False
 
-  #- debug: var=intellij_downloaded
-
-- name: download IntelliJ
-  get_url:
-    url: https://download.jetbrains.com/idea/{{ idea_tar_file }}
-    dest: /opt/idea/
-  when: intellij_downloaded.stat.exists == False
-
-- name: untar intelliJ to /opt/idea/
-  shell: tar -xvzf /opt/idea/{{ idea_tar_file }}
-  when: intellij_downloaded.stat.exists == False
-
-- name: install kdeenlive for video editing
-  dnf: name=kdenlive state=present
+    #- name: install kdeenlive for video editing
+    #dnf: name=kdenlive state=present
 
   #- name: install virtualbox
   #dnf: name={{item}} state=present
@@ -83,11 +88,8 @@
   #  - VirtualBox
   #  - akmod-VirtualBox
   #- kernel-devel
-- name: install byobu the last version {{ byobu_version }}
-  dnf: name=byobu-{{ byobu_version }} state=present
-
-- name: install tmux version {{ tmux_version }}
-  dnf: name=tmux-{{ tmux_version }} state=present
+  #- name: install tmux version {{ tmux_version }}
+  #dnf: name=tmux-{{ tmux_version }} state=present
 
 - name: set the graphical.target as default
   shell: systemctl set-default graphical.target

@@ -1,4 +1,4 @@
-- name: Install fedora 24 and it's configurations
+- name: Install fedora 28 and it's configurations
   hosts: fedora
   gather_facts: false
   become: true
@@ -9,6 +9,7 @@
     - java
     - docker
     - golang
+    - powerline-shell
 
 - name: golang
   hosts: all
@@ -18,3 +19,30 @@
     - golang
   tags:
     - golang
+
+- name: common
+  hosts: all
+  gather_facts: true
+  become: true
+  roles:
+    - common
+  tags:
+    - common
+
+- name:  magxitrackpad2
+  hosts: all
+  gather_facts: true
+  become: true
+  roles:
+    - magictrackpad2
+  tags:
+    - magictrackpad2
+
+- name: powerline-shell
+  hosts: all
+  gather_facts: true
+  become: true
+  roles:
+    - powerline-shell
+  tags:
+    - powerline-shell

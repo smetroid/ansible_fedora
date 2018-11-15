@@ -13,17 +13,17 @@ Vagrant.configure(2) do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.define "personal" do |desktop|
-    desktop.vbguest.auto_update = true
-    desktop.vbguest.auto_reboot = true
-    desktop.vbguest.installer = VagrantVbguest::Installers::RedHat
-    desktop.vm.box = "bento/fedora-24"
+   # desktop.vbguest.auto_update = true
+   # desktop.vbguest.auto_reboot = true
+   # desktop.vbguest.installer = VagrantVbguest::Installers::RedHat
+    desktop.vm.box = "fedora/28-cloud-base"
     #web.vm.provider "libvirt" do |v|
     desktop.vm.provider :libvirt do |v|
       v.memory = 3072
       v.cpus = 2
-      v.gui = true
+      #v.gui = true
     	# Default host uses a USB mouse instead of PS2
-      v.customize ["modifyvm", :id, "--mouse", "usb"]
+      #v.customize ["modifyvm", :id, "--mouse", "usb"]
 			# Add IDE controller to the VM, to allow virtual media to be attached to the controller
 			#v.customize ["storagectl", :id, "--name", "IDE Controller", "--add", "ide"]
 			# Give the VM access to the host's CD/DVD drive, by attaching the medium to the virtual IDE controller
@@ -54,7 +54,7 @@ Vagrant.configure(2) do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  config.vm.network "private_network", ip: "192.168.56.110"
+  config.vm.network "private_network", ip: "192.168.10.110"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -65,7 +65,7 @@ Vagrant.configure(2) do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  #config.vm.synced_folder "../data", "/vagrant_data"
+  config.vm.synced_folder "../data", "/vagrant_data"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.

@@ -1,0 +1,59 @@
+#- name: download and install needed libraries
+#  dnf: name={{ item }} state=present
+#  with_items:
+#    - mtdev-devel
+#    - mtdev
+#    - dkms
+#    - kernel-devel
+#    - kernel-headers
+#    - bison
+#    - flex
+#
+#- name: download Linux-Magic-Trackpad-2-Driver
+#  git:
+#    repo: https://github.com/robotrovsky/Linux-Magic-Trackpad-2-Driver.git
+#    dest: /tmp/Linux-Magic-Trackpad-2-Driver
+#
+#- name: download Xorg Multitouch Trackpad Driver
+#  git:
+#    repo: https://github.com/p2rkw/xf86-input-mtrack.git
+#    dest: /tmp/xf86-input-mtrack
+#
+#- name: compile the mtrack driver
+#  shell: cd /tmp/xf86-input-mtrack && make clean && ./configure && make && make install
+#
+#- name: copy the mtrack driver to correct path
+#  command: mv /usr/local/lib/xorg/modules/input/mtrack_drv.so /usr/lib64/xorg/modules/input/
+#
+- name: change the name of hid-magicmouse to hid-magicmouse-custom otherwise it neverloads properly
+  shell: sed -e 's/hid-magicmouse/hid-magicmouse-custom/' '{{ linux_magic_trackpad2_hid }}'/dkms.conf
+
+- name: change the Makefile magicmouse name
+  shell: sed -e 's/hid-magicmouse/hid-magicmouse-custom/' '{{ linux_magic_trackpad2_hid }}'/Makefile
+
+- name: add current user to input group, otherwise xorg will throw a permissions error when loading the driver
+  command: usermod -a input {{ currentuser }}
+  when: currentuser is defined
+
+- name: get current kernel version
+  shell: uname -r
+  register: kernel_version
+
+- name: kernel version
+  debug:
+    msg: "{{kernel_version}}"
+
+- name: compile hid-magicmouse-custom module
+  shell: cd "{{ linux_magic_trackpad2_hid }}" && make
+
+- name: copy the hid-magix-mouse-custome.ko module to the correct directory
+  file:
+    src: '{{ linux_magic_trackpad2_hid }}/hid-magicmouse-custom.ko'
+    dest: '/usr/lib/modules/{{ kernel_version }}/extra/hid/'
+
+- name: copy the hid-magix-mouse-custome.ko module to the correct directory
+  command: modprob hid-magic-mouse-custom
+
+- name: copy hid-magic-mouse-custome.conf file to /etc/modules
+  command: echo hid-magicmouse-custom > /etc/modules-load.d/hid-magicmouse-custom.conf
+
