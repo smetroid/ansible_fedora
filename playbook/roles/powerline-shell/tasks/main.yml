@@ -1,7 +1,13 @@
+- name: check if my personal system repo exists
+  stat:
+    path: ~/personal/system
+  register: metroid
+
 - name: get checkout smetroid repo
   git:
     repo: https://github.com/smetroid/system.git
     dest: ~/personal/system
+  when: metroid.stat.exists == false
 
 - name: install powerline
   pip:
@@ -31,4 +37,25 @@
     src: ~/personal/system/config/powerline-shell
     dest: ~/.config/powerline-shell
     state: link
+
+- name:  make local share fonts directory
+  file:
+    path: ~/.local/share/fonts
+    state: directory
+    #command: mkdir -p ~/.local/share/fonts
+  when: OS == "Linux"
+
+- name: download fonts for linux
+  get_url:
+    url: https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20Nerd%20Font%20Complete.otf
+    dest: ~/.local/share/fonts/Droid Sans Mono for Powerline Nerd Font Complete.otf
+  when: OS == "Linux"
+
+- name: download fonts for macos
+  get_url:
+    url: https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20Nerd%20Font%20Complete.otf
+    dest: ~/Library/Fonts/Droid Sans Mono for Powerline Nerd Font Complete.otf
+  when: OS == "MacOS"
+
+
 
