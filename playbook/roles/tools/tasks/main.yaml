@@ -1,0 +1,84 @@
+- name: download pet cli snippet manager
+  become: true
+  become_user: root
+  yum:
+    name: https://github.com/knqyf263/pet/releases/download/v0.3.0/pet_0.3.0_linux_amd64.rpm
+    state: present
+  when: OS == "Linux"
+
+- name: download pet
+  homebrew:
+    name: knqyf263/pet/pet
+    state: present
+  when: OS == "MacOS"
+
+- name: install custom system admin tools
+  become: true
+  become_user: root
+  dnf:
+    name: ['fd-find', 'bat', 'exa', 'fzf']
+    state: present
+  when: OS == "Linux"
+
+    #- name: renaming v to vi to quickly open files with vim
+    #  blockinfile:
+    #    path: ~/.bashrc
+    #    block: |
+    #      alias v='f -e vim' # quick opening files with vim
+    #    marker: "### v to vim ###"
+    #    state: present
+    #  when: OS == "Linux"
+    #
+    #- name: renaming ll to exex -al
+    #  blockinfile:
+    #    path: ~/.bashrc
+    #    block: |
+    #      alias ll='exa -al'
+    #    marker: "### exa ###"
+    #    state: present
+    #  when: OS == "Linux"
+    #
+    #- name: remapping cat to bat
+    #  blockinfile:
+    #    path: ~/.bashrc
+    #    block: |
+    #      alias cat='bat'
+    #    marker: "### renaming cat to bat ###"
+    #    state: present
+    #  when: OS == "Linux"
+    #
+- name: download and untar fasd
+  unarchive:
+    src: https://github.com/clvv/fasd/tarball/1.0.1
+    dest: ~/Downloads/
+    remote_src: yes
+  when: OS == "Linux"
+
+- name: install fasd
+  shell: cd ~/Downloads/clvv-fasd-4822024 && sudo make install
+
+  #- name: add fasd to the .bashrc file
+  #  blockinfile:
+  #    path: ~/.bashrc
+  #    block: |
+  #      eval "$(fasd --init auto)"
+  #    marker: "### fasd_entry ###"
+  #    state: present
+  #  when: OS == "Linux"
+    #
+    #- name: add fasd to the .bash_profile file
+    #  blockinfile:
+    #    path: ~/.bash_profile
+    #    block: |
+    #      eval "$(fasd --init auto)"
+    #    marker: "### fasd-entry ###"
+    #    state: present
+    #  when: OS == "MacOS"
+    #
+- name: install fasd on macos
+  homebrew:
+    name: fasd
+    state: present
+  when: OS == "MacOS"
+
+

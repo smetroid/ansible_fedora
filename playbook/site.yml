@@ -8,8 +8,24 @@
     - rails
     - java
     - docker
-    - golang
-    - powerline-shell
+
+- name: tools
+  hosts: all
+  gather_facts: true
+  become: true
+  roles:
+    - tools
+  tags:
+    - tools
+
+- name: tmux
+  hosts: all
+  gather_facts: true
+  become: true
+  roles:
+    - tmux
+  tags:
+    - tmux
 
 - name: golang
   hosts: all
@@ -46,3 +62,4 @@
     - powerline-shell
   tags:
     - powerline-shell
+
