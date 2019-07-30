@@ -12,7 +12,7 @@
     state: present
   when: OS == "MacOS"
 
-- name: install custom system admin tools
+- name: install custom system admin tools -- Linux
   become: true
   become_user: root
   dnf:
@@ -20,6 +20,11 @@
     state: present
   when: OS == "Linux"
 
+- name: install custom system admin tools -- MacOS
+  homebrew:
+    name: ['bat', 'exa', 'fzf', 'jid', 'httpie']
+    state: present
+  when: OS == "MacOS"
     #- name: renaming v to vi to quickly open files with vim
     #  blockinfile:
     #    path: ~/.bashrc
@@ -56,6 +61,7 @@
 
 - name: install fasd
   shell: cd ~/Downloads/clvv-fasd-4822024 && sudo make install
+  when: OS == "Linux"
 
   #- name: add fasd to the .bashrc file
   #  blockinfile:
