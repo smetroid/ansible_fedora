@@ -3,11 +3,11 @@
     repo: https://github.com/gpakosz/.tmux.git
     dest: ~/.tmux
 
-- name: create symbolic link
-  shell: cd && ln -s -f ~/.tmux/.tmux.conf
+#- name: create symbolic link
+#  shell: cd && ln -s -f ~/.tmux/.tmux.conf
 
-  #- name: copy .tmux.conf.local to .
-  #command: cp ~/.tmux/.tmux.conf.local ~/
+#- name: copy .tmux.conf.local to .
+#command: cp ~/.tmux/.tmux.conf.local ~/
 
 - name: create symbolic link smetroid tmux.conf.local to ~/.tmux.conf.local
   file:

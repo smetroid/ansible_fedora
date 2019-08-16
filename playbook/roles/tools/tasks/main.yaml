@@ -22,36 +22,10 @@
 
 - name: install custom system admin tools -- MacOS
   homebrew:
-    name: ['bat', 'exa', 'fzf', 'jid', 'httpie']
+    name: ['bat', 'exa', 'fzf', 'jid', 'httpie', 'docker', 'tree', 'reattach-to-user-namespace']
     state: present
   when: OS == "MacOS"
-    #- name: renaming v to vi to quickly open files with vim
-    #  blockinfile:
-    #    path: ~/.bashrc
-    #    block: |
-    #      alias v='f -e vim' # quick opening files with vim
-    #    marker: "### v to vim ###"
-    #    state: present
-    #  when: OS == "Linux"
-    #
-    #- name: renaming ll to exex -al
-    #  blockinfile:
-    #    path: ~/.bashrc
-    #    block: |
-    #      alias ll='exa -al'
-    #    marker: "### exa ###"
-    #    state: present
-    #  when: OS == "Linux"
-    #
-    #- name: remapping cat to bat
-    #  blockinfile:
-    #    path: ~/.bashrc
-    #    block: |
-    #      alias cat='bat'
-    #    marker: "### renaming cat to bat ###"
-    #    state: present
-    #  when: OS == "Linux"
-    #
+
 - name: download and untar fasd
   unarchive:
     src: https://github.com/clvv/fasd/tarball/1.0.1
@@ -63,28 +37,34 @@
   shell: cd ~/Downloads/clvv-fasd-4822024 && sudo make install
   when: OS == "Linux"
 
-  #- name: add fasd to the .bashrc file
-  #  blockinfile:
-  #    path: ~/.bashrc
-  #    block: |
-  #      eval "$(fasd --init auto)"
-  #    marker: "### fasd_entry ###"
-  #    state: present
-  #  when: OS == "Linux"
-    #
-    #- name: add fasd to the .bash_profile file
-    #  blockinfile:
-    #    path: ~/.bash_profile
-    #    block: |
-    #      eval "$(fasd --init auto)"
-    #    marker: "### fasd-entry ###"
-    #    state: present
-    #  when: OS == "MacOS"
-    #
 - name: install fasd on macos
   homebrew:
     name: fasd
     state: present
   when: OS == "MacOS"
 
+- name: create symbolic link for vim
+  file:
+    src: ~/personal/system/vimrc
+    dest: ~/.vimrc
+    state: link
 
+- name: create bundle drectory
+  file:
+    dest: ~/.vim/bundle
+    state: directory
+
+- name: clone vundle
+  git:
+    repo: https://github.com/VundleVim/Vundle.vim.git
+    dest: ~/.vim/bundle/Vundle.vim
+
+- name: install minikube
+  shell: brew cask install minikube
+  when: OS == "MacOS"
+
+- name: install glances
+  pip:
+    name:
+      - glances
+    extra_args: --user

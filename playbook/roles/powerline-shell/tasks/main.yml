@@ -15,17 +15,12 @@
       - powerline-shell
     extra_args: --user
 
-- name: add powerline-shell lines to .bashrc
-  blockinfile:
-    path: ~/.bashrc
-    block: |
-      function _update_ps1() {
-        PS1=$(powerline-shell $?)
-      }
-
-      if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
-        PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
-      fi
+- name: create symbolic link bash_profile 
+  file:
+    src: ~/personal/system/bash_profile
+    dest: ~/.bash_profile
+    state: link
+  when: OS == "MacOS"
 
 - name: create .config directory
   file:
