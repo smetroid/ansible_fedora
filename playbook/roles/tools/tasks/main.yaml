@@ -68,3 +68,12 @@
     name:
       - glances
     extra_args: --user
+
+- name: configure git bash completion
+  file:
+    src: /Library/Developer/CommandLineTools/usr/share/git-core/git-completion.bash
+    dest: /usr/local/etc/bash_completion.d/git-completion.bash
+    state: link
+  when: OS == "MacOS"
+
+
