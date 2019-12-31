@@ -33,4 +33,11 @@
     dest: ~/.tmux/plugins/tpm
   when: tpm_folder.stat.exists == false
 
+- name: add tmux plugins to tmux.conf
+  blockinfile:
+    path: ~/.tmux.conf
+    block: |
+      set -g @plugin 'tmux-plugins/tmux-resurrect'
+      set -g @plugin 'tmux-plugins/tmux-continuum'
+      run -b '~/.tmux/plugins/tpm/tpm'
 
