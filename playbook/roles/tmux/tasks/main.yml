@@ -9,8 +9,8 @@
     dest: ~/.tmux
   when: tmux_folder.stat.exists == false
 
-#- name: create symbolic link
-#  shell: cd && ln -s -f ~/.tmux/.tmux.conf
+- name: create symbolic link
+  shell: cd && ln -s -f ~/.tmux/.tmux.conf
 
 #- name: copy .tmux.conf.local to .
 #command: cp ~/.tmux/.tmux.conf.local ~/
