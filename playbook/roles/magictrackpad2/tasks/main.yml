@@ -46,14 +46,18 @@
 - name: compile hid-magicmouse-custom module
   shell: cd "{{ linux_magic_trackpad2_hid }}" && make
 
+
 - name: copy the hid-magix-mouse-custome.ko module to the correct directory
   file:
     src: '{{ linux_magic_trackpad2_hid }}/hid-magicmouse-custom.ko'
     dest: '/usr/lib/modules/{{ kernel_version }}/extra/hid/'
 
-- name: copy the hid-magix-mouse-custome.ko module to the correct directory
-  command: modprob hid-magic-mouse-custom
+- name: running depmod to get modprobe to recognize the hid-magic-mouse-custom module
+  shell: depmod
 
-- name: copy hid-magic-mouse-custome.conf file to /etc/modules
+- name: load the magic mouse module
+  command: modprobe hid-magic-mouse-custom
+
+- name: copy hid-magic-mouse-custom file to /etc/modules
   command: echo hid-magicmouse-custom > /etc/modules-load.d/hid-magicmouse-custom.conf
 

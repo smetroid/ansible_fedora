@@ -1,10 +1,16 @@
+- name: check if gpakosz repo exits
+  stat:
+    path: ~/.tmux
+  register: tmux_folder
+
 - name: get gpakosz oh my tmux
-  git :
+  git:
     repo: https://github.com/gpakosz/.tmux.git
     dest: ~/.tmux
+  when: tmux_folder.stat.exists == false
 
-#- name: create symbolic link
-#  shell: cd && ln -s -f ~/.tmux/.tmux.conf
+- name: create symbolic link
+  shell: cd && ln -s -f ~/.tmux/.tmux.conf
 
 #- name: copy .tmux.conf.local to .
 #command: cp ~/.tmux/.tmux.conf.local ~/
@@ -14,4 +20,24 @@
     src: ~/personal/system/tmux.conf.local
     dest: ~/.tmux.conf.local
     state: link
+
+
+- name: check for the plugin manager
+  stat:
+    path: ~/.tmux/tpm
+  register: tpm_folder
+
+- name: setup tmux plugin manager
+  git:
+    repo: https://github.com/tmux-plugins/tpm
+    dest: ~/.tmux/plugins/tpm
+  when: tpm_folder.stat.exists == false
+
+- name: add tmux plugins to tmux.conf
+  blockinfile:
+    path: ~/.tmux.conf
+    block: |
+      set -g @plugin 'tmux-plugins/tmux-resurrect'
+      set -g @plugin 'tmux-plugins/tmux-continuum'
+      run -b '~/.tmux/plugins/tpm/tpm'
 
