@@ -22,9 +22,13 @@
 
 - name: install custom system admin tools -- MacOS
   homebrew:
-    name: ['bat', 'exa', 'fzf', 'jid', 'httpie', 'docker', 'tree', 'reattach-to-user-namespace']
+    name: ['bat', 'exa', 'fzf', 'jid', 'httpie', 'docker', 'tree', 'reattach-to-user-namespace', 'gron']
     state: present
   when: OS == "MacOS"
+
+- name: install gron
+  shell: go get -u github.com/tomnomnom/gron
+  when: OS == "Linux"
 
 - name: download and untar fasd
   unarchive:
